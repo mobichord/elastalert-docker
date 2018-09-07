@@ -50,7 +50,7 @@ WORKDIR "${ELASTALERT_HOME}"
 
 # Install Elastalert.
 RUN python setup.py install && \
-    pip install -e .
+    pip install -e . && \
 #    pip uninstall twilio --yes && \
 #    pip install twilio==6.0.0 && \
 
