@@ -10,7 +10,7 @@ ENV SET_CONTAINER_TIMEZONE True
 # Default container timezone as found under the directory /usr/share/zoneinfo/.
 ENV CONTAINER_TIMEZONE UTC
 # URL from which to download Elastalert.
-ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/v0.1.35.zip
+ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/v0.2.4.zip
 # Directory holding configuration for Elastalert and Supervisor.
 ENV CONFIG_DIR /opt/config
 # Elastalert rules directory.
@@ -24,7 +24,7 @@ ENV ELASTALERT_HOME /opt/elastalert
 # Supervisor configuration file for Elastalert.
 ENV ELASTALERT_SUPERVISOR_CONF ${CONFIG_DIR}/elastalert_supervisord.conf
 # Alias, DNS or IP of Elasticsearch host to be queried by Elastalert. Set in default Elasticsearch configuration file.
-ENV ELASTICSEARCH_HOST elasticsearchhost
+ENV ELASTICSEARCH_HOST localhost
 # Port on above Elasticsearch host. Set in default Elasticsearch configuration file.
 ENV ELASTICSEARCH_PORT 9200
 # Use TLS to connect to Elasticsearch (True or False)
@@ -39,7 +39,7 @@ WORKDIR /opt
 # Install software required for Elastalert and NTP for time synchronization.
 RUN apk update && \
     apk upgrade && \
-    apk add ca-certificates openssl-dev openssl libffi-dev python2 python2-dev py2-pip py2-yaml gcc musl-dev tzdata openntpd wget && \
+    apk add ca-certificates openssl-dev openssl libffi-dev python3 python3-dev py3-pip py3-yaml gcc musl-dev tzdata openntpd wget && \
 # Download and unpack Elastalert.
     wget -O elastalert.zip "${ELASTALERT_URL}" && \
     unzip elastalert.zip && \
@@ -49,8 +49,8 @@ RUN apk update && \
 WORKDIR "${ELASTALERT_HOME}"
 
 # Install Elastalert.
-RUN python setup.py install && \
-    pip install -e . && \
+RUN python3 setup.py install && \
+    pip3 install -e . && \
 #    pip uninstall twilio --yes && \
 #    pip install twilio==6.0.0 && \
 
@@ -64,7 +64,7 @@ RUN python setup.py install && \
     mkdir -p /var/empty && \
 
 # Clean up.
-    apk del python2-dev && \
+    apk del python3-dev && \
     apk del musl-dev && \
     apk del gcc && \
     apk del openssl-dev && \
